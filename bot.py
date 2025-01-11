@@ -2,7 +2,7 @@ import os
 import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import heroku3  # Make sure to install: pip install heroku3
+import heroku3  # Ensure you have this installed: `pip install heroku3`
 
 # Get the Telegram Bot Token and Heroku API Key from environment variables
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
@@ -93,12 +93,8 @@ async def main():
     application.add_handler(CommandHandler("restart", restart))
     application.add_handler(CommandHandler("help", help))
 
-    # Initialize the application and start the bot
-    await application.initialize()  # Await initialization
-    await application.run_polling()  # Await the bot's polling to start
-
-    # Graceful shutdown when the app stops
-    await application.shutdown()  # Await shutdown to clean up properly when the app stops
+    # Start the bot
+    await application.run_polling()
 
 if __name__ == '__main__':
     # Start the async main function
