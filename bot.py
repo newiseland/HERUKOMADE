@@ -1,35 +1,18 @@
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
-
-
-# Load environment variables from .env file
-
 import os
-import heroku3  # Make sure to install the `heroku3` package using `pip install heroku3`
-
-# Read the Heroku API key from the environment variable
-HEROKU_API_KEY = os.getenv('HRKU-3fbe925b-3597-45f6-addf-8962a039b268')
-
-# Authenticate with Heroku API
-heroku_conn = heroku3.from_key(HEROKU_API_KEY)
-
-# Now you can use `heroku_conn` to interact with your Heroku app, for example:
-app_name = "your-app-name"
-app = heroku_conn.apps()[app_name]
-
-# Example: List environment variables for your app
-print(app.config())
-# Replace with your actual Telegram bot token and Heroku API key
-TELEGRAM_TOKEN = '7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ'
-HEROKU_API_KEY = 'HRKU-3fbe925b-3597-45f6-addf-8962a039b268'
-
 import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import os
+import heroku3  # Ensure you have this installed: `pip install heroku3`
 
-# Replace with your actual Telegram bot token
+# Get the Telegram Bot Token and Heroku API Key from environment variables
 TELEGRAM_TOKEN = os.getenv('7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ')
+HEROKU_API_KEY = os.getenv('HRKU-3fbe925b-3597-45f6-addf-8962a039b268')
+
+if not TELEGRAM_TOKEN or not HEROKU_API_KEY:
+    raise ValueError("Telegram Bot Token or Heroku API Key is missing.")
+
+# Connect to Heroku API using the Heroku API Key
+heroku_conn = heroku3.from_key(HEROKU_API_KEY)
 
 # Start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,34 +20,54 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Add a new environment variable to the Heroku app
 async def add_var(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    app_name = context.args[0]
-    key = context.args[1]
-    value = context.args[2]
-    app = heroku_conn.apps()[app_name]
-    app.config()[key] = value
-    await update.message.reply_text(f"Environment variable {key} added to {app_name}.")
+    try:
+        app_name = context.args[0]
+        key = context.args[1]
+        value = context.args[2]
+        app = heroku_conn.apps()[app_name]
+        app.config()[key] = value
+        await update.message.reply_text(f"Environment variable {key} added to {app_name}.")
+    except IndexError:
+        await update.message.reply_text("Usage: /addvar <app_name> <key> <value>")
+    except Exception as e:
+        await update.message.reply_text(f"Error: {str(e)}")
 
 # Delete an environment variable from the Heroku app
 async def del_var(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    app_name = context.args[0]
-    key = context.args[1]
-    app = heroku_conn.apps()[app_name]
-    app.config().delete(key)
-    await update.message.reply_text(f"Environment variable {key} deleted from {app_name}.")
+    try:
+        app_name = context.args[0]
+        key = context.args[1]
+        app = heroku_conn.apps()[app_name]
+        app.config().delete(key)
+        await update.message.reply_text(f"Environment variable {key} deleted from {app_name}.")
+    except IndexError:
+        await update.message.reply_text("Usage: /delvar <app_name> <key>")
+    except Exception as e:
+        await update.message.reply_text(f"Error: {str(e)}")
 
 # Deploy your Heroku app (trigger a manual deploy)
 async def deploy(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    app_name = context.args[0]
-    app = heroku_conn.apps()[app_name]
-    app.restart()
-    await update.message.reply_text(f"{app_name} has been redeployed.")
+    try:
+        app_name = context.args[0]
+        app = heroku_conn.apps()[app_name]
+        app.restart()
+        await update.message.reply_text(f"{app_name} has been redeployed.")
+    except IndexError:
+        await update.message.reply_text("Usage: /deploy <app_name>")
+    except Exception as e:
+        await update.message.reply_text(f"Error: {str(e)}")
 
 # Restart your Heroku app
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    app_name = context.args[0]
-    app = heroku_conn.apps()[app_name]
-    app.restart()
-    await update.message.reply_text(f"{app_name} has been restarted.")
+    try:
+        app_name = context.args[0]
+        app = heroku_conn.apps()[app_name]
+        app.restart()
+        await update.message.reply_text(f"{app_name} has been restarted.")
+    except IndexError:
+        await update.message.reply_text("Usage: /restart <app_name>")
+    except Exception as e:
+        await update.message.reply_text(f"Error: {str(e)}")
 
 # Help command
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -77,6 +80,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(help_text)
 
+# Main function to start the bot
 async def main():
     # Initialize the Application with the bot token
     application = Application.builder().token(TELEGRAM_TOKEN).build()
@@ -97,4 +101,5 @@ async def main():
     await application.shutdown()  # Await shutdown to clean up properly when the app stops
 
 if __name__ == '__main__':
-    asyncio.run(main())  # Start the async main function
+    # Start the async main function
+    asyncio.run(main())
