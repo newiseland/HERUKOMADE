@@ -93,7 +93,7 @@ async def main():
     application.add_handler(CommandHandler("restart", restart))
     application.add_handler(CommandHandler("help", help))
 
-    # Start the bot
+    # Start the bot and handle the lifecycle
     await application.run_polling()
 
 if __name__ == '__main__':
