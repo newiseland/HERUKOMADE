@@ -2,11 +2,11 @@ import os
 import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import heroku3  # Ensure you have this installed: `pip install heroku3`
+import heroku3  # Make sure to install: pip install heroku3
 
 # Get the Telegram Bot Token and Heroku API Key from environment variables
-TELEGRAM_TOKEN = os.getenv('7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ')
-HEROKU_API_KEY = os.getenv('HRKU-3fbe925b-3597-45f6-addf-8962a039b268')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+HEROKU_API_KEY = os.getenv('HEROKU_API_KEY')
 
 if not TELEGRAM_TOKEN or not HEROKU_API_KEY:
     raise ValueError("Telegram Bot Token or Heroku API Key is missing.")
