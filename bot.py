@@ -4,7 +4,21 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 
 # Load environment variables from .env file
 
+import os
+import heroku3  # Make sure to install the `heroku3` package using `pip install heroku3`
 
+# Read the Heroku API key from the environment variable
+HEROKU_API_KEY = os.getenv('HRKU-3fbe925b-3597-45f6-addf-8962a039b268')
+
+# Authenticate with Heroku API
+heroku_conn = heroku3.from_key(HEROKU_API_KEY)
+
+# Now you can use `heroku_conn` to interact with your Heroku app, for example:
+app_name = "your-app-name"
+app = heroku_conn.apps()[app_name]
+
+# Example: List environment variables for your app
+print(app.config())
 # Replace with your actual Telegram bot token and Heroku API key
 TELEGRAM_TOKEN = '7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ'
 HEROKU_API_KEY = 'HRKU-3fbe925b-3597-45f6-addf-8962a039b268'
