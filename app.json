@@ -1,0 +1,28 @@
+{
+  "name": "telegram-heroku-bot",
+  "description": "A Telegram bot that interacts with Heroku",
+  "repository": "https://github.com/yourusername/your-repository",
+  "keywords": ["python", "telegram", "bot", "heroku"],
+  "env": {
+    "TELEGRAM_TOKEN": {
+      "description": "Your Telegram bot token",
+      "required": true
+    },
+    "HEROKU_API_KEY": {
+      "description": "Your Heroku API key",
+      "required": true
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "addons": []
+}
