@@ -9,6 +9,14 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 TELEGRAM_TOKEN = '7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ'
 HEROKU_API_KEY = 'HRKU-3fbe925b-3597-45f6-addf-8962a039b268'
 
+import asyncio
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
+import os
+
+# Replace with your actual Telegram bot token
+TELEGRAM_TOKEN = os.getenv('7907726222:AAGx_WNkbmTGhHfOMAXqdk6rZXNB6Kjo4FQ')
+
 # Start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Welcome! I can help you manage your Heroku app. Use the commands to control it.')
@@ -68,9 +76,11 @@ async def main():
     application.add_handler(CommandHandler("help", help))
 
     # Initialize the application and start the bot
-    await application.initialize()  # Ensure initialization is awaited
-    await application.run_polling()
+    await application.initialize()  # Await initialization
+    await application.run_polling()  # Await the bot's polling to start
+
+    # Graceful shutdown when the app stops
+    await application.shutdown()  # Await shutdown to clean up properly when the app stops
 
 if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+    asyncio.run(main())  # Start the async main function
