@@ -63,7 +63,8 @@ async def main():
     application.add_handler(CommandHandler("restart", restart))
     application.add_handler(CommandHandler("help", help))
 
-    # Start the bot
+    # Initialize the application and start the bot
+    await application.initialize()  # Ensure initialization is awaited
     await application.run_polling()
 
 if __name__ == '__main__':
