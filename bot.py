@@ -1,6 +1,13 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
+from dotenv import load_dotenv
+import os
 
+# Load environment variables from .env file
+load_dotenv()
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+HEROKU_API_KEY = os.getenv("HEROKU_API_KEY")
 # Replace with your actual Telegram bot token and Heroku API key
 TELEGRAM_TOKEN = 'YOUR_BOT_TOKEN'
 HEROKU_API_KEY = 'YOUR_HEROKU_API_KEY'
